@@ -45,7 +45,7 @@
       type: exports.T_PLAYER_TYPE,
       data: "black"
     };
-    exports.S_PLAYER_B = JSON.stringify(exports.O_PLAYER_BLACK);
+    exports.S_PLAYER_BLACK = JSON.stringify(exports.O_PLAYER_BLACK);
   
 
   
