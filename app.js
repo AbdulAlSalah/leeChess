@@ -23,8 +23,8 @@ app.get("/", (req, res) => {
 
 app.get("/play", indexRouter);
 
-
-var currentGame = new Game(0);
+var gameID = 0;
+var currentGame = new Game(gameID);
 var connectionID = 0; //each websocket receives a unique ID
 
 wss.on("connection", (ws) => {
@@ -48,11 +48,70 @@ wss.on("connection", (ws) => {
   /*
    * inform the client about its assigned player type
    */
-  con.send(playerType == "WHITE" ? messages.S_PLAYER_WHITE : messages.S_PLAYER_BLACK);
+  if (playerType == "WHITE") {
+    con.send(messages.S_PLAYER_WHITE);
+  } else {
+    con.send(messages.S_PLAYER_BLACK);  
+  }
+ 
+  
+  /* once we have two players, there is no way back;
+  * a new game object is created;
+  * if a player now leaves, the game is aborted (player is not preplaced)
+  */
+ if (currentGame.hasTwoConnectedPlayers()) {
+   currentGame = new Game(gameID++);
+ }
 
+
+ con.on("message",  (message) => {
+    //TODO the message sent from the client is porocessed here
+ });
+
+
+
+
+
+  con.on("close", (code) => {
+    /*
+    * code 1001 means almost always closing initiated by the client;
+    * source: https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent
+    */
+    console.log(con.id + " disconnected ...");
+
+    if (code == "1001") {
+      /*
+      * if possible, abort the game; if not, the game is already completed
+      */
+      let gameObj = websockets[con.id];
+
+      if (gameObj.isValidTransition(gameObj.gameState, "ABORTED")) {
+        gameObj.setStatus("ABORTED");
+        //gameStatus.gamesAborted++;
+
+        /*
+        * determine whose connection remains open;
+        * close it
+        */
+        try {
+          gameObj.playerA.close();
+          gameObj.playerA = null;
+        } catch (e) {
+          console.log("Player A closing: " + e);
+        }
+
+        try {
+          gameObj.playerB.close();
+          gameObj.playerB = null;
+        } catch (e) {
+          console.log("Player B closing: " + e);
+        }
+      }
+    }
+  });
 });
 
-
+//node app.js 3000
 
 
 

@@ -41,7 +41,7 @@
     /*
      * Server to client: set as player black
      */
-    exports.O_PLAYER_BlACK = {
+    exports.O_PLAYER_BLACK = {
       type: exports.T_PLAYER_TYPE,
       data: "black"
     };
