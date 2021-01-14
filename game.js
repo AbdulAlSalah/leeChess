@@ -11,7 +11,7 @@ var game = function(gameID) {
 
   /*
    * The game can be in a number of different states.
-   */
+   */ 
   game.prototype.transitionStates = {};
   game.prototype.transitionStates["0_JOINT"] = 0;
   game.prototype.transitionStates["1_JOINT"] = 1;
