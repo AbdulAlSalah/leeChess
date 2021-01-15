@@ -11,6 +11,9 @@ function GameState(sb, socket) {
   this.board = Chess();
   this.playerType = null;
   this.statusBar = sb;
+  this.move_first = null;
+  this.move_second = null;
+  this.turn = false;
 
   this.getPlayerType = function () {
     return this.playerType;
@@ -38,15 +41,14 @@ function GameState(sb, socket) {
 
     this.board.move({from: move_start, to: move_end});
 
-    
-
-    var outgoingMsg = Messages.O_MAKE_MOVE;
-    outgoingMsg.data = {move_start, move_end};
-    socket.send(JSON.stringify(outgoingMsg));
+    //var outgoingMsg = Messages.O_MAKE_MOVE;
+    //outgoingMsg.data = {move_start, move_end};
+    //socket.send(JSON.stringify(outgoingMsg));
 
     //is the game complete?
     let winner = this.whoWon();
 
+    //POSSIBLY CHANGE THIS AS WELL TO PROPERLY DISABLE THE GAME
     if (winner != null) {
 
       /* disable further clicks by cloning each alphabet
@@ -72,6 +74,16 @@ function GameState(sb, socket) {
       socket.close();
     }
   };
+
+  this.sendMove = function(move_first, move_second) {
+    //first, update the game for the current player
+    this.updateGame(move_first, move_second);
+
+    //then, send the move to the other player across the server
+    var outgoingMsg = Messages.O_MAKE_MOVE;
+    outgoingMsg.data = {move_first, move_second};
+    socket.send(JSON.stringify(outgoingMsg));
+  }
 }
 
 //CHANGE THIS TO CREATE AN INTERACTIVE CHESSBOARD
@@ -81,13 +93,24 @@ function ChessBoard(gs) {
     var elements = document.querySelectorAll(".tile");
     Array.from(elements).forEach(function (el) {
       el.addEventListener("click", function singleClick(e) {
-        var move = e.target;
-        //var move = e.target.id; ???
-        return move;
+        if (!this.turn) {
+          return;
+        }
+        if (this.move_first == null) {
+          this.move_first = e.target.id;
+        }
+        else if (this.move_second == null) {
+          this.move_second = e.target.id;
+          this.sendMove(this.move_first, this.move_second);
+          this.move_first = null;
+          this.move_second = null;
+          this.turn = false;
+        }
       });
     });
   };
 }
+
 
 //CHANGE THIS TO SET EVERYTHING UP ACCORDINGLY
 //set everything up, including the WebSocket
@@ -102,20 +125,21 @@ function ChessBoard(gs) {
    *
    * the GameState object coordinates everything
    */
-
-  var vw = new VisibleWordBoard();
   var sb = new StatusBar();
 
   var gs = new GameState(sb, socket);
-  var ab = new ChessBoard(gs);
+  var cb = new ChessBoard(gs);
+  cb.initialize();
 
   socket.onmessage = function (event) {
     let incomingMsg = JSON.parse(event.data);
 
     //set player type
     if (incomingMsg.type == Messages.T_PLAYER_TYPE) {
-      gs.setPlayerType(incomingMsg.data); //should be "white" or "black"
-
+      gs.setPlayerType(incomingMsg.data); //should be "WHITE" or "BLACK"
+      if (gs.playerType == "WHITE") {
+        gs.turn = true;
+      }
       //if player type is A, (1) pick a word, and (2) sent it to the server
     }
 
@@ -124,25 +148,15 @@ function ChessBoard(gs) {
       incomingMsg.type == Messages.T_MAKE_MOVE
     ) {
       gs.updateGame(incomingMsg.data[0], incomingMsg.data[1]);
+      gs.turn = true;
 
       sb.setStatus(Status["player2Intro"]);
       //gs.initializeVisibleWordArray(); // initialize the word array, now that we have the word
-      ab.initialize();
       //vw.setWord(gs.getVisibleWordArray());
-    }
-
-    //Player A: wait for guesses and update the board ...
-    if (
-      incomingMsg.type == Messages.T_MAKE_MOVE &&
-      gs.getPlayerType() == "A"
-    ) {
-      sb.setStatus(Status["guessed"] + incomingMsg.data);
-      gs.updateGame(incomingMsg.data);
     }
   };
 
   socket.onopen = function () {
-    updateBoard("");
     socket.send("{}");
   };
 
