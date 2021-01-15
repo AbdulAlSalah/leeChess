@@ -66,7 +66,7 @@ wss.on("connection", (ws) => {
 
  con.on("message",  (message) => {
     //TODO the message sent from the client is porocessed here
-    if ((playerType == "WHITE") && (websockets[con.id].playerBlack !== null)) {    
+    if ((playerType === "WHITE") && (websockets[con.id].playerBlack !== null)) {    
       websockets[con.id].playerBlack.send(message);
       console.log(message + " WHITE");
     } else if (websockets[con.id].playerWhite !== null) {

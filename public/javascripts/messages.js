@@ -54,7 +54,7 @@
      */
     exports.T_MAKE_MOVE = "MAKE-A-MOVE";
     exports.O_MAKE_MOVE = {
-      type: exports.O_MAKE_MOVE,
+      type: exports.T_MAKE_MOVE,
       data: null
     };
     //exports.S_MAKE_MOVE does not exist, as data needs to be set
