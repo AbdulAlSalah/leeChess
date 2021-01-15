@@ -1,6 +1,7 @@
-//@ts-check
 
-const { Chess } = require("./chess");
+
+
+
 //const { Status } = require("./statuses.js");
 
 //let clickSound = new Audio("../data/click.wav");
@@ -37,18 +38,10 @@ function GameState(sb, socket) {
 
     this.board.move({from: move_start, to: move_end});
 
-    //wrong guess
-    if (res.length == 0) {
-      this.incrWrongGuess();
-    } else {
-      this.revealLetters(clickedLetter, res);
-    }
+    
 
-    this.alphabet.makeLetterUnAvailable(clickedLetter);
-    this.visibleWordBoard.setWord(this.visibleWordArray);
-
-    var outgoingMsg = Messages.MOVE;
-    outgoingMsg.data = move;
+    var outgoingMsg = Messages.O_MAKE_MOVE;
+    outgoingMsg.data = {move_start, move_end};
     socket.send(JSON.stringify(outgoingMsg));
 
     //is the game complete?
@@ -62,7 +55,7 @@ function GameState(sb, socket) {
        */
       let elements = document.querySelectorAll(".letter");
       Array.from(elements).forEach(function (el) {
-        el.style.pointerEvents = "none";
+       // el.style.pointerEvents = "none";
       });
 
       let alertString;
@@ -88,7 +81,8 @@ function ChessBoard(gs) {
     var elements = document.querySelectorAll(".tile");
     Array.from(elements).forEach(function (el) {
       el.addEventListener("click", function singleClick(e) {
-        var move = e.target.id;
+        var move = e.target;
+        //var move = e.target.id; ???
         return move;
       });
     });
@@ -120,26 +114,26 @@ function ChessBoard(gs) {
 
     //set player type
     if (incomingMsg.type == Messages.T_PLAYER_TYPE) {
-      gs.setPlayerType(incomingMsg.data); //should be "A" or "B"
+      gs.setPlayerType(incomingMsg.data); //should be "white" or "black"
 
       //if player type is A, (1) pick a word, and (2) sent it to the server
     }
 
     //Player B: wait for target word and then start guessing ...
     if (
-      incomingMsg.type == Messages.T_MOVE
+      incomingMsg.type == Messages.T_MAKE_MOVE
     ) {
       gs.updateGame(incomingMsg.data[0], incomingMsg.data[1]);
 
       sb.setStatus(Status["player2Intro"]);
-      gs.initializeVisibleWordArray(); // initialize the word array, now that we have the word
+      //gs.initializeVisibleWordArray(); // initialize the word array, now that we have the word
       ab.initialize();
-      vw.setWord(gs.getVisibleWordArray());
+      //vw.setWord(gs.getVisibleWordArray());
     }
 
     //Player A: wait for guesses and update the board ...
     if (
-      incomingMsg.type == Messages.T_MAKE_A_GUESS &&
+      incomingMsg.type == Messages.T_MAKE_MOVE &&
       gs.getPlayerType() == "A"
     ) {
       sb.setStatus(Status["guessed"] + incomingMsg.data);
