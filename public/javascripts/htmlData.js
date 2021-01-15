@@ -1,6 +1,6 @@
 // recriece boardState as a 2d array [x][y] and value as a piece (ex. "b" = bishop)
 
-let updateBoard = (boardState) => {
+let updateBoard = (boardState, onClick) => {
     let form = document.getElementById("f");
     let table = document.createElement("table");
 
@@ -15,6 +15,9 @@ let updateBoard = (boardState) => {
 
             img.src = "images/New_White/pawn.png";
             //TODO process input array
+
+            img.addEventListener("click", onClick);
+
 
             td.appendChild(img);
             tr.appendChild(td);

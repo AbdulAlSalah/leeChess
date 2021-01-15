@@ -109,15 +109,21 @@ function ChessBoard(gs) {
   var gs = new GameState(sb, socket);
   var ab = new ChessBoard(gs);
 
+  var playerType;
+
   socket.onmessage = function (event) {
     let incomingMsg = JSON.parse(event.data);
+    console.log(incomingMsg);
+
 
     //set player type
     if (incomingMsg.type == Messages.T_PLAYER_TYPE) {
       gs.setPlayerType(incomingMsg.data); //should be "white" or "black"
-
+      
       //if player type is A, (1) pick a word, and (2) sent it to the server
     }
+
+
 
     //Player B: wait for target word and then start guessing ...
     if (
@@ -142,8 +148,9 @@ function ChessBoard(gs) {
   };
 
   socket.onopen = function () {
-    updateBoard("");
-    socket.send("{}");
+    updateBoard("", () => {
+      socket.send(JSON.stringify({data:"Hello from the other side"}));
+    });
   };
 
   //server sends a close event only if the game was aborted from some side
