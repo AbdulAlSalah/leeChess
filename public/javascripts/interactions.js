@@ -142,6 +142,7 @@ function ChessBoard(gs) {
   };
 
   socket.onopen = function () {
+    updateBoard("");
     socket.send("{}");
   };
 
