@@ -44,7 +44,11 @@ function GameState(sb, socket) {
   
     this.updateGame = function (move_start, move_end) {
   
-      this.board.move({from: move_start, to: move_end});
+      let moved = this.board.move({from: move_start, to: move_end});
+      console.log(moved);
+      if (moved !== null) {
+        updateBoard(move_start, move_end);
+      }
   
       //var outgoingMsg = Messages.O_MAKE_MOVE;
       //outgoingMsg.data = {move_start, move_end};
@@ -96,13 +100,13 @@ function GameState(sb, socket) {
   function ChessBoard(gs) {
     //only initialize for player that should actually be able to use the board
     this.initialize = function () {
-        updateBoard(null,null);
+      initBoard(gs.playerType);
       var elements = document.querySelectorAll(".tile");
       Array.from(elements).forEach(function (el) {
         el.addEventListener("click", function singleClick(e) {
             //socket.send(e.target.id);
            
-            console.log(gs.turn);
+            console.log(e.target.id);
           if (gs.turn === false) {
               
             return;
@@ -164,8 +168,9 @@ function GameState(sb, socket) {
       if (
         incomingMsg.type == Messages.T_MAKE_MOVE
       ) {
-        console.log(incomingMsg);
-        gs.updateGame(incomingMsg.data[0], incomingMsg.data[1]);
+        console.log(incomingMsg.data);
+
+        gs.updateGame(incomingMsg.data.move_first, incomingMsg.data.move_second);
         gs.turn = true;
   
         //sb.setStatus(Status["player2Intro"]);
