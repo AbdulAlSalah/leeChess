@@ -46,9 +46,15 @@ function GameState(sb, socket) {
   
       let moved = this.board.move({from: move_start, to: move_end});
       console.log(moved);
+      let res = false;
+
+    
       if (moved !== null) {
+        this.turn = !this.turn;
         updateBoard(move_start, move_end);
+        res = true;
       }
+      
   
       //var outgoingMsg = Messages.O_MAKE_MOVE;
       //outgoingMsg.data = {move_start, move_end};
@@ -83,11 +89,15 @@ function GameState(sb, socket) {
         finalMsg.data = this.getPlayerType;
         socket.close();
       }
+
+      return res;
     };
   
     this.sendMove = function(move_first, move_second) {
       //first, update the game for the current player
-      this.updateGame(move_first, move_second);
+      if (!this.updateGame(move_first, move_second)) {
+        console.log("Invalid move - please try again");
+      }
   
       //then, send the move to the other player across the server
       var outgoingMsg = Messages.O_MAKE_MOVE;
@@ -120,7 +130,10 @@ function GameState(sb, socket) {
             gs.sendMove(gs.move_first, gs.move_second);
             gs.move_first = null;
             gs.move_second = null;
-            gs.turn = false;
+            
+          } else {
+            gs.move_first = e.target.id;
+            gs.move_second = null;
           }
         });
       });
@@ -170,8 +183,10 @@ function GameState(sb, socket) {
       ) {
         console.log(incomingMsg.data);
 
-        gs.updateGame(incomingMsg.data.move_first, incomingMsg.data.move_second);
-        gs.turn = true;
+        if (!gs.updateGame(incomingMsg.data.move_first, incomingMsg.data.move_second)) {
+          console.log("Invalid move from opponent");
+        }
+        
   
         //sb.setStatus(Status["player2Intro"]);
         //gs.initializeVisibleWordArray(); // initialize the word array, now that we have the word

@@ -1,7 +1,7 @@
 /*
  * Object representing the word to guess.
  */
-function VisibleWordBoard() {
+function VisibleWordBoard() { 
     this.setWord = function(visibleWord) {
       document.getElementById("word").innerHTML = (Array.isArray(visibleWord) ? visibleWord.join("") : visibleWord);
     };
