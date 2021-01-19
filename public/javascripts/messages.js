@@ -34,7 +34,7 @@
     exports.T_PLAYER_TYPE = "PLAYER-TYPE";
     exports.O_PLAYER_WHITE = {
       type: exports.T_PLAYER_TYPE,
-      data: "white"
+      data: "WHITE"
     };
     exports.S_PLAYER_WHITE = JSON.stringify(exports.O_PLAYER_WHITE);
   
@@ -43,7 +43,7 @@
      */
     exports.O_PLAYER_BLACK = {
       type: exports.T_PLAYER_TYPE,
-      data: "black"
+      data: "BLACK"
     };
     exports.S_PLAYER_BLACK = JSON.stringify(exports.O_PLAYER_BLACK);
   
@@ -54,7 +54,7 @@
      */
     exports.T_MAKE_MOVE = "MAKE-A-MOVE";
     exports.O_MAKE_MOVE = {
-      type: exports.O_MAKE_MOVE,
+      type: exports.T_MAKE_MOVE,
       data: null
     };
     //exports.S_MAKE_MOVE does not exist, as data needs to be set

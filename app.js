@@ -66,6 +66,13 @@ wss.on("connection", (ws) => {
 
  con.on("message",  (message) => {
     //TODO the message sent from the client is porocessed here
+    if ((playerType === "WHITE") && (websockets[con.id].playerBlack !== null)) {    
+      websockets[con.id].playerBlack.send(message);
+      console.log(message + " WHITE");
+    } else if (websockets[con.id].playerWhite !== null) {
+      websockets[con.id].playerWhite.send(message);
+      console.log(message+ " BLACK");
+    }
  });
 
 
@@ -94,17 +101,17 @@ wss.on("connection", (ws) => {
         * close it
         */
         try {
-          gameObj.playerA.close();
-          gameObj.playerA = null;
+          gameObj.playerWhite.close();
+          gameObj.playerWhite = null;
         } catch (e) {
-          console.log("Player A closing: " + e);
+          console.log("Player White closing: " + e);
         }
 
         try {
-          gameObj.playerB.close();
-          gameObj.playerB = null;
+          gameObj.playerBlack.close();
+          gameObj.playerBlack = null;
         } catch (e) {
-          console.log("Player B closing: " + e);
+          console.log("Player Black closing: " + e);
         }
       }
     }
