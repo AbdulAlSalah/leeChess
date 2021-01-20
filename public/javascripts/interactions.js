@@ -38,41 +38,14 @@ function GameState(sb, socket) {
   };
 
   this.updateGame = function (move_start, move_end) {
-
-    this.board.move({from: move_start, to: move_end});
+      this.board.move({from: move_start, to: move_end});
+    }
 
     //var outgoingMsg = Messages.O_MAKE_MOVE;
     //outgoingMsg.data = {move_start, move_end};
     //socket.send(JSON.stringify(outgoingMsg));
 
     //is the game complete?
-    let winner = this.whoWon();
-
-    //POSSIBLY CHANGE THIS AS WELL TO PROPERLY DISABLE THE GAME
-    if (winner != null) {
-
-      /* disable further clicks by cloning each alphabet
-       * letter and not adding an event listener; then
-       * replace the original node through some DOM logic
-       */
-      let elements = document.querySelectorAll(".letter");
-      Array.from(elements).forEach(function (el) {
-       // el.style.pointerEvents = "none";
-      });
-
-      let alertString;
-      if (winner == this.playerType) {
-        alertString = Status["gameWon"];
-      } else {
-        alertString = Status["gameLost"];
-      }
-      alertString += Status["playAgain"];
-      sb.setStatus(alertString);
-
-      let finalMsg = Messages.O_GAME_WON_BY;
-      finalMsg.data = this.getPlayerType;
-      socket.close();
-    }
   };
 
   this.sendMove = function(move_first, move_second) {
@@ -153,6 +126,33 @@ function ChessBoard(gs) {
     ) {
       gs.updateGame(incomingMsg.data[0], incomingMsg.data[1]);
       gs.turn = true;
+      let winner = this.whoWon();
+
+    //POSSIBLY CHANGE THIS AS WELL TO PROPERLY DISABLE THE GAME
+    if (winner != null) {
+
+      /* disable further clicks by cloning each alphabet
+       * letter and not adding an event listener; then
+       * replace the original node through some DOM logic
+       */
+      let elements = document.querySelectorAll(".letter");
+      Array.from(elements).forEach(function (el) {
+       // el.style.pointerEvents = "none";
+      });
+
+      let alertString;
+      if (winner == this.playerType) {
+        alertString = Status["gameWon"];
+      } else {
+        alertString = Status["gameLost"];
+      }
+      alertString += Status["playAgain"];
+      sb.setStatus(alertString);
+
+      let finalMsg = Messages.O_GAME_WON_BY;
+      finalMsg.data = this.getPlayerType;
+      socket.close();
+    }
 
       sb.setStatus(Status["player2Intro"]);
       //gs.initializeVisibleWordArray(); // initialize the word array, now that we have the word
