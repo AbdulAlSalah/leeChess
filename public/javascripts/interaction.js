@@ -84,10 +84,15 @@ function GameState(sb, socket) {
         }
         alertString += Status["playAgain"]; */
        // sb.setStatus(alertString);
+        if (this.playerType == winner) {
+          createEndScreen("Congratulations - You Won!!");
+        } else {
+          createEndScreen("Game Over - better luck next time");
+        }
   
         let finalMsg = Messages.O_GAME_WON_BY;
         finalMsg.data = this.getPlayerType;
-        socket.close();
+        //socket.close();
       }
 
       return res;

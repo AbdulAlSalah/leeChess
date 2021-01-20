@@ -4,22 +4,23 @@ let buffer = ["a","b","c","d","e","f","g","h"];
 
 let initBoard = (playerType) => {
     let form = document.getElementById("f");
-    let table = document.createElement("table");
+    let table = document.createElement("div");
+    table.className="container";
 
-    table.style = "background: url(images/6349381.jpg)";
+    
 
     //first row
-        let tr = document.createElement("tr");
+        
 
 
-        let rook1 = document.createElement("td");
-        let knight1 = document.createElement("td");
-        let bishop1 = document.createElement("td");
-        let royal1 = document.createElement("td");
-        let royal2 = document.createElement("td");
-        let bishop2 = document.createElement("td");
-        let knight2 = document.createElement("td");
-        let rook2 = document.createElement("td");
+        let rook1 = document.createElement("div");
+        let knight1 = document.createElement("div");
+        let bishop1 = document.createElement("div");
+        let royal1 = document.createElement("div");
+        let royal2 = document.createElement("div");
+        let bishop2 = document.createElement("div");
+        let knight2 = document.createElement("div");
+        let rook2 = document.createElement("div");
 
         let img1 = document.createElement("img");
         let img2 = document.createElement("img");
@@ -89,22 +90,22 @@ let initBoard = (playerType) => {
         rook2.appendChild(img8);
 
 
-        tr.appendChild(rook1);
-        tr.appendChild(knight1);
-        tr.appendChild(bishop1);
-        tr.appendChild(royal1);
-        tr.appendChild(royal2);
-        tr.appendChild(bishop2);
-        tr.appendChild(knight2);
-        tr.appendChild(rook2);
+        table.appendChild(rook1);
+        table.appendChild(knight1);
+        table.appendChild(bishop1);
+        table.appendChild(royal1);
+        table.appendChild(royal2);
+        table.appendChild(bishop2);
+        table.appendChild(knight2);
+        table.appendChild(rook2);
 
-        table.appendChild(tr);
+  
 
     //add pawns
-    let tr_pawn = document.createElement("tr");
+    
     for (let i = 0; i < 8; i++) {
         
-        let td = document.createElement("td");
+        let div = document.createElement("div");
 
 
 
@@ -132,15 +133,15 @@ let initBoard = (playerType) => {
         //img.addEventListener("click",onClick);
 
 
-        td.appendChild(img);
-        tr_pawn.appendChild(td);
+        div.appendChild(img);
+        table.appendChild(div);
     }
-    table.appendChild(tr_pawn);
+    
 
     for (let i = 2; i < 6; i++) {
-        let tr = document.createElement("tr");
+        
         for (let j = 0; j < 8; j++) {
-            let td = document.createElement("td");
+            let div = document.createElement("div");
 
 
 
@@ -165,20 +166,20 @@ let initBoard = (playerType) => {
             //img.addEventListener("click",onClick);
 
 
-            td.appendChild(img);
-            tr.appendChild(td);
+            div.appendChild(img);
+            table.appendChild(div);
         }
 
-        table.appendChild(tr);
+       
             
        
         
     }
 
-    tr_pawn = document.createElement("tr");
+    
     for (let i = 0; i < 8; i++) {
         
-        let td = document.createElement("td");
+        let div = document.createElement("div");
 
 
 
@@ -206,25 +207,25 @@ let initBoard = (playerType) => {
         //img.addEventListener("click",onClick);
 
 
-        td.appendChild(img);
-        tr_pawn.appendChild(td);
+        div.appendChild(img);
+        table.appendChild(div);
     }
-    table.appendChild(tr_pawn);
+   
 
 
     //add the last row to the table
 
-     tr = document.createElement("tr");
+    
 
 
-         rook1 = document.createElement("td");
-         knight1 = document.createElement("td");
-         bishop1 = document.createElement("td");
-         royal1 = document.createElement("td");
-         royal2 = document.createElement("td");
-         bishop2 = document.createElement("td");
-         knight2 = document.createElement("td");
-         rook2 = document.createElement("td");
+         rook1 = document.createElement("div");
+         knight1 = document.createElement("div");
+         bishop1 = document.createElement("div");
+         royal1 = document.createElement("div");
+         royal2 = document.createElement("div");
+         bishop2 = document.createElement("div");
+         knight2 = document.createElement("div");
+         rook2 = document.createElement("div");
 
          img1 = document.createElement("img");
          img2 = document.createElement("img");
@@ -294,16 +295,16 @@ let initBoard = (playerType) => {
         rook2.appendChild(img8);
 
 
-        tr.appendChild(rook1);
-        tr.appendChild(knight1);
-        tr.appendChild(bishop1);
-        tr.appendChild(royal1);
-        tr.appendChild(royal2);
-        tr.appendChild(bishop2);
-        tr.appendChild(knight2);
-        tr.appendChild(rook2);
+        table.appendChild(rook1);
+        table.appendChild(knight1);
+        table.appendChild(bishop1);
+        table.appendChild(royal1);
+        table.appendChild(royal2);
+        table.appendChild(bishop2);
+        table.appendChild(knight2);
+        table.appendChild(rook2);
 
-        table.appendChild(tr);
+        
     
     form.appendChild(table);
 }
@@ -324,4 +325,22 @@ let updateBoard = (start,end) => {
 
     img2.src = "images/blank.png"
     temp.appendChild(img2);
+}
+
+let createEndScreen = (message) => {
+    
+    
+
+    let form = document.getElementById("f");
+    
+    form.removeChild(form.firstChild);
+    form.removeChild(form.firstChild);
+    
+
+    let div = document.createElement("div");
+
+    div.innerHTML = message;
+
+    form.appendChild(div);
+
 }

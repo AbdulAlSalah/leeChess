@@ -1,4 +1,20 @@
+
+
 .tile {
-    height: 115px;
-    width: 115px;
+    height: 100px;
+    width: 100px;
+}
+.container {
+    background: url(../images/6349381.jpg);
+    background-size: 81vh 81vh;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: grid;
+    grid-template-rows: 10vh 10vh 10vh 10vh 10vh 10vh 10vh 10vh;                     	
+    grid-template-columns: 10vh 10vh 10vh 10vh 10vh 10vh 10vh 10vh;  
+
+
+    align-items: stretch;
+
+    justify-content:center;
 }

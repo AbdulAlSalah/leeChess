@@ -60,7 +60,8 @@ wss.on("connection", (ws) => {
   * if a player now leaves, the game is aborted (player is not preplaced)
   */
  if (currentGame.hasTwoConnectedPlayers()) {
-   currentGame = new Game(gameID++);
+   gameID++;
+   currentGame = new Game(gameID);
  }
 
 
