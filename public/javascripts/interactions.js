@@ -25,13 +25,16 @@ function GameState(sb, socket) {
 
   this.whoWon = function () {
     //too many wrong guesses? Player A (who set the word) won
-    if (this.board.in_checkmate) {
+    if (this.board.in_checkmate()) {
       if (this.playerType == "WHITE") {
         return "BLACK";
       }
       else {
         return "WHITE";
       }
+    }
+    else if (this.board.game_over()) {
+      return "DRAW";
     }
     //word solved? Player B won
     return null; //nobody won yet
@@ -46,6 +49,37 @@ function GameState(sb, socket) {
     //socket.send(JSON.stringify(outgoingMsg));
 
     //is the game complete?
+<<<<<<< Updated upstream
+=======
+    let winner = this.whoWon();
+
+    //POSSIBLY CHANGE THIS AS WELL TO PROPERLY DISABLE THE GAME
+    if (winner != null) {
+
+      /* disable further clicks by cloning each alphabet
+       * letter and not adding an event listener; then
+       * replace the original node through some DOM logic
+       */
+      let elements = document.querySelectorAll(".letter");
+      Array.from(elements).forEach(function (el) {
+       // el.style.pointerEvents = "none";
+      });
+
+      let alertString;
+      if (winner == this.playerType) {
+        alertString = Status["gameWon"];
+      } else {
+        alertString = Status["gameLost"];
+      }
+      alertString += Status["playAgain"];
+      sb.setStatus(alertString);
+
+      let finalMsg = Messages.O_GAME_WON_BY;
+      finalMsg.data = winner;
+      socket.send(JSON.stringify(outgoingMsg));
+      //socket.close();
+    }
+>>>>>>> Stashed changes
   };
 
   this.sendMove = function(move_first, move_second) {
@@ -66,10 +100,11 @@ function ChessBoard(gs) {
     var elements = document.querySelectorAll(".tile");
     Array.from(elements).forEach(function (el) {
       el.addEventListener("click", function singleClick(e) {
-        if (!this.turn) {
+        console.log(e.target.id);
+        if (this.turn !== false) {
           return;
         }
-        if (this.move_first == null) {
+        if (this.move_first === null) {
           this.move_first = e.target.id;
         }
         else if (this.move_second == null) {
@@ -113,8 +148,16 @@ function ChessBoard(gs) {
 
     //set player type
     if (incomingMsg.type == Messages.T_PLAYER_TYPE) {
+<<<<<<< Updated upstream
       gs.setPlayerType(incomingMsg.data); //should be "white" or "black"
       
+=======
+      console.log("hovadina");
+      gs.setPlayerType(incomingMsg.data); //should be "WHITE" or "BLACK"
+      if (gs.playerType === "WHITE") {
+        gs.turn = true;
+      }
+>>>>>>> Stashed changes
       //if player type is A, (1) pick a word, and (2) sent it to the server
     }
 
