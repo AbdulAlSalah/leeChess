@@ -316,6 +316,8 @@ let updateBoard = (start,end) => {
 
     let img2 = document.getElementById(end);
 
+    let imgSrc = img2.src;
+
     let temp_id = img1.id;
 
     img1.id = img2.id;
@@ -325,22 +327,19 @@ let updateBoard = (start,end) => {
 
     img2.src = "images/blank.png"
     temp.appendChild(img2);
+
+    if (imgSrc !== "images/blank.png") {
+        animate(imgSrc);
+    }
 }
 
-let createEndScreen = (message) => {
-    
-    
+let animate = (src) => {
+    let img = document.createElement("img");
+    img.src = src;
+    img.className="ani";
 
-    let form = document.getElementById("f");
-    
-    form.removeChild(form.firstChild);
-    form.removeChild(form.firstChild);
-    
+    let ani = document.getElementById("ani");
 
-    let div = document.createElement("div");
-
-    div.innerHTML = message;
-
-    form.appendChild(div);
-
+    ani.appendChild(img);
 }
+

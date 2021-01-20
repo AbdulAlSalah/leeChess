@@ -1,8 +1,98 @@
 body {
+  margin: 40px;
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;
+  text-align: center;
 }
 
-a {
-  color: #00B7FF;
+a:hover {
+  color: green;
+}
+
+a:visited {
+  color: yellow;
+}
+
+a::before, a::after {
+  
+}
+
+button {
+  background-color: #555555;
+  border: none;
+  color: #e7e7e7;
+  padding: 30px 64px;
+  display: inline-block;
+  font-size: 32px;
+}
+
+.grid {
+  position:absolute;
+  right: 25%;
+  top: 15%;
+  display: grid;
+  grid-template-rows: repeat(3, 100px);
+  grid-template-columns: repeat(5, 100px);
+  grid-row-gap: 40px;
+  grid-column-gap: 10px;
+}
+
+.grid div {
+    background-color: orange;
+}
+
+#grid-header {
+    font-size: 29px;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
+
+#grid-content {
+    grid-row-start: 2;
+    grid-row-end: 4;
+    grid-column-start: 1;
+    grid-column-end: 4;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+}
+
+#grid-sidebar {
+    grid-row-start: 2;
+    grid-row-end: 4;
+    grid-column-start: 4;
+    grid-column-end: 6;
+    display: grid;	
+}
+
+#side-header {
+  font-size: 18px;
+}
+#side-header::before {
+  content: "<===";
+}
+
+#side-header::after {
+  content: "===>";
+}
+
+@media (max-width: 1365px) {
+  body::after {
+    position: absolute;
+    top: 80%;
+    right: 24%;
+    content: "INSUFFICIENT RESOLUTION. CONTENT MAY NOT BE RENDERED CORRECTLY.";
+    text-align: center;
+    color: red;
+  }
+}
+
+@media (max-height: 767px) {
+  body::after {
+    content: "INSUFFICIENT RESOLUTION. CONTENT MAY NOT BE RENDERED CORRECTLY.";
+    color: red;
+  }
 }

@@ -1,31 +1,30 @@
-<!DOCTYPE html>
-<!--    Note: this file is not in use any longer, it is superseded by splash.ejs which
-        is an almost exact copy (apart from template tags).
--->
 <html>
   <head>
-    <title>Ballons: a two player word game</title>
-    <link rel="stylesheet" href="stylesheets/splash.css" />
+    <title>LeeChess: You have probably searched for the wrong website</title>
+    <link rel="stylesheet" href="stylesheets/style.css" />
   </head>
   <body>
     <style>
 	body {
-  		background-image: url('logo.jpg');
   		background-repeat: no-repeat;
   		background-attachment: fixed;
   		background-size: 50% 75%;
 	}
 	</style>
     <main>
-      <section id="left">
-        <h1>Chess but with a little twist</h1>
-        <h2>The twist: less features</h2>
-      </section>
-      <section id="right">
+      <div class = "grid">
+	<div id = "grid-header">
+          <span>The <a title="Mom can we have chess?" href="https://imgflip.com/i/4ud4py">chess</a> at home.</span>
+        </div>
+        <div id = "grid-content">  
           <form action="/play" method="get">
             <button type="submit">PLAY</button>
           </form>
-      </section>
+        </div>
+        <div id = "grid-sidebar">
+          <span id = "side-header">Did you know?</span>
+        </div>
+      </div>
     </main>
 
   </body>

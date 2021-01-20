@@ -30,13 +30,16 @@ function GameState(sb, socket) {
     this.whoWon = function () {
       //too many wrong guesses? Player A (who set the word) won
       if (this.board.in_checkmate()) {
-        if (this.playerType == "WHITE") {
-          return "BLACK";
-        }
-        else {
+        console.log();
+        if (this.board.turn() == "b") {
           return "WHITE";
         }
-        
+        else {
+          return "BLACK";
+        }
+      }
+      else if (this.board.game_over()) {
+        return "DRAW";
       }
       //word solved? Player B won
       return null; //nobody won yet
@@ -61,39 +64,7 @@ function GameState(sb, socket) {
       //socket.send(JSON.stringify(outgoingMsg));
   
       //is the game complete?
-      let winner = this.whoWon();
-      
-  
-      //POSSIBLY CHANGE THIS AS WELL TO PROPERLY DISABLE THE GAME
-      if (winner != null) {
-        console.log(winner);
-        /* disable further clicks by cloning each alphabet
-         * letter and not adding an event listener; then
-         * replace the original node through some DOM logic
-         */
-        let elements = document.querySelectorAll(".letter");
-        Array.from(elements).forEach(function (el) {
-         // el.style.pointerEvents = "none";
-        });
-  
-       /* let alertString;
-        if (winner == this.playerType) {
-          alertString = Status["gameWon"];
-        } else {
-          alertString = Status["gameLost"];
-        }
-        alertString += Status["playAgain"]; */
-       // sb.setStatus(alertString);
-        if (this.playerType == winner) {
-          createEndScreen("Congratulations - You Won!!");
-        } else {
-          createEndScreen("Game Over - better luck next time");
-        }
-  
-        let finalMsg = Messages.O_GAME_WON_BY;
-        finalMsg.data = this.getPlayerType;
-        //socket.close();
-      }
+
 
       return res;
     };
@@ -181,6 +152,22 @@ function GameState(sb, socket) {
         }
         //if player type is A, (1) pick a word, and (2) sent it to the server
       }
+
+
+      if (incomingMsg.type == Messages.T_GAME_WON_BY) {
+        let winner = gs.whoWon();
+        let alertString;
+        if (winner == this.playerType) {
+          alertString = Status["gameWon"];
+        } else {
+          alertString = Status["gameLost"];
+        }
+        alertString += Status["playAgain"];
+        sb.setStatus(alertString);
+      }
+
+
+
   
       //Player B: wait for target word and then start guessing ...
       if (
@@ -191,6 +178,38 @@ function GameState(sb, socket) {
         if (!gs.updateGame(incomingMsg.data.move_first, incomingMsg.data.move_second)) {
           console.log("Invalid move from opponent");
         }
+        let winner = gs.whoWon();
+
+        //POSSIBLY CHANGE THIS AS WELL TO PROPERLY DISABLE THE GAME
+        if (winner != null) {
+    
+          /* disable further clicks by cloning each alphabet
+           * letter and not adding an event listener; then
+           * replace the original node through some DOM logic
+           */
+          let elements = document.querySelectorAll(".letter");
+          Array.from(elements).forEach(function (el) {
+           // el.style.pointerEvents = "none";
+          });
+    
+          let alertString;
+          if (winner == this.playerType) {
+            alertString = Status["gameWon"];
+          } else {
+            alertString = Status["gameLost"];
+          }
+          alertString += Status["playAgain"];
+          sb.setStatus(alertString);
+    
+          let finalMsg = Messages.O_GAME_WON_BY;
+          finalMsg.data = winner;
+
+          socket.send(JSON.stringify(finalMsg));
+
+          socket.close();
+        }
+    
+          sb.setStatus(Status["player2Intro"]);
         
   
         //sb.setStatus(Status["player2Intro"]);

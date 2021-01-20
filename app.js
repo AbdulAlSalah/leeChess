@@ -37,13 +37,15 @@ wss.on("connection", (ws) => {
   let playerType = currentGame.addPlayer(con);
   websockets[con.id] = currentGame;
 
+
+
   console.log(
     "Player %s placed in game %s as %s",
     con.id,
     currentGame.id,
     playerType
   );
-
+    
 
   /*
    * inform the client about its assigned player type
