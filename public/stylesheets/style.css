@@ -1,50 +1,76 @@
 body {
+  
   margin: 40px;
   padding: 50px;
   font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;
   text-align: center;
+  background-color: rgb(68, 73, 82);
 }
 
 a:hover {
-  color: green;
+  color: #2c64c9;
+}
+
+a {
+  color:green;
 }
 
 a:visited {
   color: yellow;
 }
 
-a::before, a::after {
+
+
+
+
+button {
+  background-color: orange;
+  border: none;
+
+  padding: 60px 84px;
+  display: inline-block;
+  font-size: 32px;
+
+  animation-name:incoming ;
+  animation-duration: 2s;
+}
+
+button:hover {
+  background-color: rgba(255, 165, 0, 0.5);
   
 }
 
-button {
-  background-color: #555555;
-  border: none;
-  color: #e7e7e7;
-  padding: 30px 64px;
-  display: inline-block;
-  font-size: 32px;
+button:active {
+  background-color: grey;
 }
 
 .grid {
   position:absolute;
-  right: 25%;
-  top: 15%;
+  right: 23%;
+  top: 0%;
   display: grid;
-  grid-template-rows: repeat(3, 100px);
-  grid-template-columns: repeat(5, 100px);
+  grid-template-rows: repeat(3, 200px);
+  grid-template-columns: repeat(7, 142px);
   grid-row-gap: 40px;
-  grid-column-gap: 10px;
+  grid-column-gap: 30px;
+  font-size: 200%;
 }
 
-.grid div {
-    background-color: orange;
+#grid-rules {
+  grid-row-start: 2;
+  grid-row-end: 3;
+  grid-column-start: 1;
+  grid-column-end: 4;
+  display: grid;
+  background-color: orange;
 }
+
+
 
 #grid-header {
-    font-size: 29px;
+    font-size:230%;
     grid-column-start: 1;
-    grid-column-end: 4;
+    grid-column-end: 8;
     display: grid;
     justify-content: center;
     align-items: center;
@@ -53,30 +79,34 @@ button {
 #grid-content {
     grid-row-start: 2;
     grid-row-end: 4;
-    grid-column-start: 1;
-    grid-column-end: 4;
+    grid-column-start: 4;
+    grid-column-end: 6;
     display: grid;
-    justify-content: center;
-    align-items: center;
+    
+   
 }
 
 #grid-sidebar {
+    background-color: orange;
     grid-row-start: 2;
     grid-row-end: 4;
-    grid-column-start: 4;
-    grid-column-end: 6;
+    grid-column-start: 6;
+    grid-column-end: 8;
     display: grid;	
+    font-size: 80%;
 }
 
-#side-header {
-  font-size: 18px;
-}
+
 #side-header::before {
-  content: "<===";
+  content: "<=== ";
 }
 
 #side-header::after {
-  content: "===>";
+  content: " ===>";
+}
+
+#rules-inner {
+  font-size: 20px;
 }
 
 @media (max-width: 1365px) {
@@ -92,7 +122,48 @@ button {
 
 @media (max-height: 767px) {
   body::after {
+    position: absolute;
+    top: 80%;
+    right: 24%;
     content: "INSUFFICIENT RESOLUTION. CONTENT MAY NOT BE RENDERED CORRECTLY.";
+    text-align: center;
     color: red;
+  } 
+}
+
+.ani {
+ 
+  position: absolute;
+  top: 85%;
+  width: 75vw;
+  height: 10vh;
+
+
+  left:13vw;
+  
+  border-style: solid;
+  border-color: rgb(32, 30, 38);
+
+}
+.helper {
+  background-color:rgb(32, 30, 38);
+  width: 75vw;
+  height: 10vh;
+  margin: 0;
+  pad: 10px;
+
+  animation-name: fillBar;
+  animation-duration: 3s;
+}
+
+@keyframes incoming {
+  0% {
+    
+    transform: rotate(0deg) translate(-50vw,0);
+  }
+  100% {
+    transform: rotate(360deg) translate(0,0);
+ 
   }
 }
+

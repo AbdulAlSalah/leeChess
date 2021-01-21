@@ -1,4 +1,145 @@
-.tile {
-    height: 115px;
-    width: 115px;
+body {
+    background: linear-gradient(45deg, rgb(68, 73, 82) , rgba(68, 73, 82,0.5));
 }
+.btn {
+    
+    background: rgb(255, 188, 43);
+    border: 0;
+
+    width: 30vh;
+    height: 10vh;
+
+    
+    top: 88%;
+
+    transition: background-color 750ms ease-in;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+
+}
+
+.btn:hover {
+    background-color: rgba(255, 188, 43, 0.5);
+    
+}
+
+.tile {
+    height: 10vh;
+    width: 10vh;
+}
+.container {
+    background: url(../images/6349381.jpg);
+    background-size: 81vh 81vh;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: grid;
+    grid-template-rows: 10vh 10vh 10vh 10vh 10vh 10vh 10vh 10vh;                     	
+    grid-template-columns: 10vh 10vh 10vh 10vh 10vh 10vh 10vh 10vh;  
+
+
+    align-items: stretch;
+
+    justify-content:center;
+}
+
+.tile:active {
+    border-style: dashed;
+    border-color:green;
+    border-width: 4px;
+}
+
+.centerXY {
+    display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-basis: 100%;
+}
+
+@keyframes throwing {
+    0% {
+        top: 8%;
+    }
+    17% {
+        top:50%;
+        left:13%
+    }
+    33% {
+        top:65%;
+        left:18%;
+    }
+    50% {
+        top:50%;
+        left:25%;
+    }
+    67% {
+        top:35%;
+        left:18%;
+    }
+    83% {
+        top:50%;
+        left:13%;
+    }
+    100% {
+        top:90%;
+        left:10%;
+    }
+  }
+
+.ani {
+    position: absolute;
+    left: 10%;
+    top: -100%;
+    animation-name: throwing;
+    animation-duration: 4s;
+
+}
+
+.pRemoved {
+    position: absolute;
+    top:10%;
+    right: 4%;
+    padding: 0px;
+    margin: 0px;
+}
+
+.clock {
+    position: absolute;
+    top:50%;
+    right: 4%;
+    padding: 0px;
+    margin: 0px;
+}
+
+.btn:active:before {
+    content: "Creating "
+}
+
+@media (max-width: 1365px) {
+    body::after {
+      position: absolute;
+      top: 85%;
+      right: 24%;
+      content: "INSUFFICIENT RESOLUTION. CONTENT MAY NOT BE RENDERED CORRECTLY.";
+      text-align: center;
+      color: red;
+      font-size: 20px;
+    }
+  }
+  
+  @media (max-height: 767px) {
+    body::after {
+      position: absolute;
+      top: 85%;
+      right: 24%;
+      content: "INSUFFICIENT RESOLUTION. CONTENT MAY NOT BE RENDERED CORRECTLY.";
+      text-align: center;
+      color: red;
+      font-size: 20px;
+    }
+  }
+
+

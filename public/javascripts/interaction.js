@@ -2,7 +2,7 @@
 
 
 
-
+let clickSound = new Audio("../images/click.wav");
 
 
 
@@ -14,6 +14,9 @@
 function GameState(sb, socket) {
     this.board = Chess();
     this.playerType = null;
+
+    this.otherPlayer = null;
+
     this.statusBar = sb;
     this.move_first = null;
     this.move_second = null;
@@ -30,13 +33,19 @@ function GameState(sb, socket) {
     this.whoWon = function () {
       //too many wrong guesses? Player A (who set the word) won
       if (this.board.in_checkmate()) {
-        if (this.playerType == "WHITE") {
-          return "BLACK";
-        }
-        else {
+        console.log();
+        
+        if (this.board.turn() == "b") {
+
           return "WHITE";
         }
-        
+        else {
+
+          return "BLACK";
+        }
+      }
+      else if (this.board.game_over()) {
+        return "DRAW";
       }
       //word solved? Player B won
       return null; //nobody won yet
@@ -53,6 +62,7 @@ function GameState(sb, socket) {
         this.turn = !this.turn;
         updateBoard(move_start, move_end);
         res = true;
+
       }
       
   
@@ -61,34 +71,7 @@ function GameState(sb, socket) {
       //socket.send(JSON.stringify(outgoingMsg));
   
       //is the game complete?
-      let winner = this.whoWon();
-      
-  
-      //POSSIBLY CHANGE THIS AS WELL TO PROPERLY DISABLE THE GAME
-      if (winner != null) {
-        console.log(winner);
-        /* disable further clicks by cloning each alphabet
-         * letter and not adding an event listener; then
-         * replace the original node through some DOM logic
-         */
-        let elements = document.querySelectorAll(".letter");
-        Array.from(elements).forEach(function (el) {
-         // el.style.pointerEvents = "none";
-        });
-  
-       /* let alertString;
-        if (winner == this.playerType) {
-          alertString = Status["gameWon"];
-        } else {
-          alertString = Status["gameLost"];
-        }
-        alertString += Status["playAgain"]; */
-       // sb.setStatus(alertString);
-  
-        let finalMsg = Messages.O_GAME_WON_BY;
-        finalMsg.data = this.getPlayerType;
-        socket.close();
-      }
+
 
       return res;
     };
@@ -97,6 +80,10 @@ function GameState(sb, socket) {
       //first, update the game for the current player
       if (!this.updateGame(move_first, move_second)) {
         console.log("Invalid move - please try again");
+        this.statusBar.setStatus(Status["invalidMove"]);
+        
+      } else {
+        this.statusBar.setStatus(Status["oppenentMove"]);
       }
   
       //then, send the move to the other player across the server
@@ -115,12 +102,14 @@ function GameState(sb, socket) {
       Array.from(elements).forEach(function (el) {
         el.addEventListener("click", function singleClick(e) {
             //socket.send(e.target.id);
+
            
             console.log(e.target.id);
           if (gs.turn === false) {
               
             return;
           }
+          clickSound.play();
           if (gs.move_first == null) {
             gs.move_first = e.target.id;
           }
@@ -170,12 +159,42 @@ function GameState(sb, socket) {
         
         cb = new ChessBoard(gs);
         cb.initialize();
+        sb.setStatus(Status["wait"]);
+
+        //if player type is A, (1) pick a word, and (2) sent it to the server
+      }
+
+      if (incomingMsg.type === Messages.T_OTHER_PLAYER) {
         if (gs.playerType === "WHITE") {
           gs.turn = true;
           
         }
-        //if player type is A, (1) pick a word, and (2) sent it to the server
+        if (gs.playerType === "WHITE") {
+          sb.setStatus(Status["player1Intro"]);
+        } else {
+          sb.setStatus(Status["player2Intro"]);
+        }
       }
+
+
+      if (incomingMsg.type == Messages.T_GAME_WON_BY) {
+        
+        let winner = incomingMsg.data;
+        console.log(winner);
+        let alertString;
+        if (winner == gs.playerType) {
+          alertString = Status["gameWon"];
+        } else {
+          alertString = Status["gameLost"];
+        }
+        alertString += Status["playAgain"];
+        sb.setStatus(alertString);
+
+        socket.close();
+      }
+
+
+
   
       //Player B: wait for target word and then start guessing ...
       if (
@@ -185,7 +204,43 @@ function GameState(sb, socket) {
 
         if (!gs.updateGame(incomingMsg.data.move_first, incomingMsg.data.move_second)) {
           console.log("Invalid move from opponent");
+        } else {
+          sb.setStatus(Status["move"]);
         }
+        let winner = gs.whoWon();
+
+        
+
+        //POSSIBLY CHANGE THIS AS WELL TO PROPERLY DISABLE THE GAME
+        if (winner != null) {
+    
+          /* disable further clicks by cloning each alphabet
+           * letter and not adding an event listener; then
+           * replace the original node through some DOM logic
+           */
+          let elements = document.querySelectorAll(".letter");
+          Array.from(elements).forEach(function (el) {
+           // el.style.pointerEvents = "none";
+          });
+          console.log(winner);
+          let alertString;
+          if (winner == gs.playerType) {
+            alertString = Status["gameWon"];
+          } else {
+            alertString = Status["gameLost"];
+          }
+          alertString += Status["playAgain"];
+          sb.setStatus(alertString);
+    
+          let finalMsg = Messages.O_GAME_WON_BY;
+          finalMsg.data = winner;
+
+          socket.send(JSON.stringify(finalMsg));
+
+          socket.close();
+        }
+    
+          
         
   
         //sb.setStatus(Status["player2Intro"]);
@@ -201,8 +256,11 @@ function GameState(sb, socket) {
     //server sends a close event only if the game was aborted from some side
     socket.onclose = function () {
       if (gs.whoWon() == null) {
-        //sb.setStatus(Status["aborted"]);
+        sb.setStatus(Status["aborted"]);
       }
+      let finalMsg = Messages.O_GAME_WON_BY;
+      finalMsg.data = gs.whoWon();
+      this.send(JSON.stringify(finalMsg));
     };
   
     socket.onerror = function () { };

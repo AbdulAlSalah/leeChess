@@ -6,27 +6,28 @@
         <title>leeChess</title>
     </head>
     <nav>
-      <button>New Game</button>
-      <button>Forfeit</button>
+      <form action="/play" method="get">
+        <button type="submit" class = "btn">NEW GAME</button>
+      </form>
     </nav>
 
-    <hr>
+    
 
     <body>
       <form id="f">     
          
- 
+        <div id = "ani"></div>    
 
 
     
 
         
       </form>
-
       <section id="status" class="centerXY">
-      </section>	
+      </section>
 
-      <hr>
+      <div class = "pRemoved" id = "pRemoved">0 pieces thrown out</div>
+      <div class = "clock" id = "clock">0 seconds since the first move</div>
 
       <footer>
           <p>leeChess created by Oliver Sihlovec and Kristián Gogora</p>

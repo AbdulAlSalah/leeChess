@@ -68,5 +68,12 @@
       type: exports.T_GAME_OVER,
       data: null
     };
+
+    exports.T_OTHER_PLAYER = "OTHER-PLAYER";
+    exports.O_OTHER_PLAYER = {
+      type: exports.T_OTHER_PLAYER
+    }
+    exports.S_OTHER_PLAYER = JSON.stringify(exports.O_OTHER_PLAYER);
+
   })(typeof exports === "undefined" ? (this.Messages = {}) : exports);
   //if exports is undefined, we are on the client; else the server
