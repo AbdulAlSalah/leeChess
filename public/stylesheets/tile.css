@@ -1,5 +1,5 @@
 body {
-    background: linear-gradient(45deg, rgb(224, 145, 27) , rgba(224, 145, 27,0));
+    background: linear-gradient(45deg, rgb(68, 73, 82) , rgba(68, 73, 82,0.5));
 }
 .btn {
     
@@ -98,7 +98,48 @@ body {
 
 }
 
+.pRemoved {
+    position: absolute;
+    top:10%;
+    right: 4%;
+    padding: 0px;
+    margin: 0px;
+}
 
+.clock {
+    position: absolute;
+    top:50%;
+    right: 4%;
+    padding: 0px;
+    margin: 0px;
+}
 
+.btn:active:before {
+    content: "Creating "
+}
+
+@media (max-width: 1365px) {
+    body::after {
+      position: absolute;
+      top: 85%;
+      right: 24%;
+      content: "INSUFFICIENT RESOLUTION. CONTENT MAY NOT BE RENDERED CORRECTLY.";
+      text-align: center;
+      color: red;
+      font-size: 20px;
+    }
+  }
+  
+  @media (max-height: 767px) {
+    body::after {
+      position: absolute;
+      top: 85%;
+      right: 24%;
+      content: "INSUFFICIENT RESOLUTION. CONTENT MAY NOT BE RENDERED CORRECTLY.";
+      text-align: center;
+      color: red;
+      font-size: 20px;
+    }
+  }
 
 

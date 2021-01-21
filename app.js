@@ -12,19 +12,28 @@ server = http.createServer(app);
 
 const wss = new websocket.Server({ server });
 var messages = require("./public/javascripts/messages");
+const Stats = require("./Stats");
+const { Socket } = require("dgram");
+
 
 var websockets = {};
 
 
+app.set("view engine", "ejs");
 
 app.get("/", (req, res) => {
-  res.sendFile("demo_splash.html", {root: "./public"});
+  //res.sendFile("demo_splash.html", {root: "./public"});
+  res.render("splash.ejs", {
+            gamesPlayed: Stats.gamesPlayed,
+            whiteWon: Stats.whiteWon,
+            draw: Stats.draw
+  });
 });
 
 app.get("/play", indexRouter);
 
-var gameID = 0;
-var currentGame = new Game(gameID);
+
+var currentGame = new Game(Stats.gamesPlayed);
 var connectionID = 0; //each websocket receives a unique ID
 
 wss.on("connection", (ws) => {
@@ -62,8 +71,11 @@ wss.on("connection", (ws) => {
   * if a player now leaves, the game is aborted (player is not preplaced)
   */
  if (currentGame.hasTwoConnectedPlayers()) {
-   gameID++;
-   currentGame = new Game(gameID);
+ 
+   websockets[con.id].playerBlack.send(messages.S_OTHER_PLAYER);
+   websockets[con.id].playerWhite.send(messages.S_OTHER_PLAYER);
+
+   currentGame = new Game(Stats.gamesPlayed++);
  }
 
 
@@ -71,9 +83,11 @@ wss.on("connection", (ws) => {
     //TODO the message sent from the client is porocessed here
     if ((playerType === "WHITE") && (websockets[con.id].playerBlack !== null)) {    
       websockets[con.id].playerBlack.send(message);
+      won(message);
       console.log(message + " WHITE");
     } else if (websockets[con.id].playerWhite !== null) {
       websockets[con.id].playerWhite.send(message);
+      won(message);
       console.log(message+ " BLACK");
     }
  });
@@ -124,7 +138,18 @@ wss.on("connection", (ws) => {
 //node app.js 3000
 
 
+let won = (message) => {
+  let m = JSON.parse(message);
 
+  if (m.type === messages.T_GAME_WON_BY) {
+    if (m.data === "WHITE") {
+      Stats.whiteWon++;
+    } 
+    else if (m.data === "DRAW") {
+      Stats.draw++;
+    }
+  }
+}
 
 server.listen(port);
 

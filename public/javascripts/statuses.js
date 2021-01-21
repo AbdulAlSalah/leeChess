@@ -13,5 +13,9 @@ var Status = {
     player2Intro: `Black. Wait for White to make the first move.`,
     //player2IntroNoTargetYet: `Player 2. Waiting for word to guess. You win if you can guess it within ${Setup.MAX_ALLOWED_GUESSES} tries.`,
     //guessed: "Player 2 guessed letter ",
-    aborted: "Your gaming partner is no longer available, game aborted. <a href='/play'>Play again!</a>"
+    aborted: "Your gaming partner is no longer available, game aborted. <a href='/play'>Play again!</a>",
+    wait: "Waiting for the other player to join",
+    move: "Please make a move.",
+    oppenentMove: "Wait for your opponent to make a move.",
+    invalidMove: "Invalid move. Please try another move."
   }

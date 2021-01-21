@@ -328,7 +328,7 @@ let updateBoard = (start,end) => {
     img2.src = "images/blank.png"
     temp.appendChild(img2);
 
-    if (imgSrc !== "images/blank.png") {
+    if (imgSrc.indexOf("blank") === -1 ) {
         animate(imgSrc);
     }
 }
@@ -341,5 +341,15 @@ let animate = (src) => {
     let ani = document.getElementById("ani");
 
     ani.appendChild(img);
+
+    let thrown = document.getElementById("pRemoved");
+
+    thrown.innerHTML = ani.childElementCount + " pieces thrown out";
 }
+
+var s= 0;
+setInterval(() => {
+    s++;
+    document.getElementById("clock").innerHTML = s+ " seconds since the game started";
+}, 1000);
 

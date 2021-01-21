@@ -12,6 +12,8 @@
 	}
 	</style>
     <main>
+        
+
       <div class = "grid">
 	<div id = "grid-header">
           <span>The chess at home.</span>
@@ -21,14 +23,30 @@
             <button type="submit">PLAY</button>
           </form>
         </div>
+        <div id = "grid-rules">Rules
+            <p id = "rules-inner">Regular chess rules apply. After selecting an empty tile or a tile occupied by the opponents piece, you will have to select another tile before attempting to make another move (your turn is not skipped).</p>
+
+
+        </div>
         <div id = "grid-sidebar">
-          <span id = "side-header">Did you know?</span>
+          <span id = "side-header">Did you know?
+            
+
+
+          </span>
+          <p><%= gamesPlayed %>  games played </p>
+          <p> <%= whiteWon %> times white won </p>
+          <p> <%= draw %> draws occured </p>
+          
         </div>
       </div>
+
+
+      
+
     </main>
 
-   
-
+    
 
   </body>
 </html>
